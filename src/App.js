@@ -44,24 +44,18 @@ export default function App() {
     }
   }, []);
 
-  useEffect(() => {
-    if (currentAnimal === undefined) return;
-    const abortController = new AbortController();
-    const signal = abortController.signal;
+  function onClickAnimal(animal) {
+    setCurrentAnimal(animal);
 
-    fetch(`/api/animalLovers/${currentAnimal}`, { signal })
+    fetch(`/api/animalLovers/${animal}`)
       .then((res) => res.json())
       .then((json) => {
         setAnimalLovers(json);
       })
       .catch((e) => {
         console.error(e);
-      });
-
-    return function cleanup() {
-      abortController.abort();
-    }
-  }, [currentAnimal]);
+      }); 
+  }
 
   return (
     <Container maxWidth="lg">
@@ -77,7 +71,7 @@ export default function App() {
             data-testid={animal}
             size="small" 
             name={animal} 
-            onClick={val => setCurrentAnimal(val)}
+            onClick={val => onClickAnimal(val)}
           />
         ))}
         </Grid>
